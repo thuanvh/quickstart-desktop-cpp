@@ -5,3 +5,8 @@
 /bnb_sdk/bin/
 /bnb_sdk/include/
 /resources/
+.vs/
+Debug/
+Release/
+obj/
+*.user

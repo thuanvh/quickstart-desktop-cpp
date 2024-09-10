@@ -111,19 +111,20 @@ namespace WpfApp1
             byte[] managedArray = new byte[width * height * 4]; // Assuming 4 bytes per pixel (e.g., RGBA)
             Marshal.Copy(imageData, managedArray, 0, managedArray.Length);
 
-            Console.WriteLine($"Callback called with image of size: {width}x{height}");
-            // Create a BitmapSource from the RGBA buffer
-            BitmapSource bitmap = BitmapSource.Create(
-                width,                        // Width of the image
-                height,                       // Height of the image
-                96,                           // DPI (Dots Per Inch) of the image
-                96,                           // DPI (Dots Per Inch) of the image
-                PixelFormats.Bgra32,          // Pixel format (Bgra32 for RGBA buffer)
-                null,                         // Palette (null for RGBA)
-                managedArray,                   // Buffer containing pixel data
-                width * 4                     // Stride (width * bytes per pixel)
-            );
-            SaveBitmapSourceAsJpeg(bitmap, "output.jpg");
+            BanubaInterop.ReleaseImage(imageData);
+            //Console.WriteLine($"Callback called with image of size: {width}x{height}");
+            //// Create a BitmapSource from the RGBA buffer
+            //BitmapSource bitmap = BitmapSource.Create(
+            //    width,                        // Width of the image
+            //    height,                       // Height of the image
+            //    96,                           // DPI (Dots Per Inch) of the image
+            //    96,                           // DPI (Dots Per Inch) of the image
+            //    PixelFormats.Bgra32,          // Pixel format (Bgra32 for RGBA buffer)
+            //    null,                         // Palette (null for RGBA)
+            //    managedArray,                   // Buffer containing pixel data
+            //    width * 4                     // Stride (width * bytes per pixel)
+            //);
+            //SaveBitmapSourceAsJpeg(bitmap, "output.jpg");
             //// Set the BitmapSource as the source for the Image control
             //Dispatcher.BeginInvoke( new Action(() => { ImageControl.Source = bitmap; }));
 
