@@ -24,6 +24,7 @@ namespace {
     std::shared_ptr<bnb::player_api::window_output> window_output;
     std::shared_ptr<bnb::utility> utility;
     bnb::camera_sptr bnb_camera;
+    std::shared_ptr<bnb::player_api::opengl_frame_output> frame_output;
     // Global variable to store the callback
     ImageCallbackType g_image_callback = nullptr;
 }
@@ -108,7 +109,7 @@ void RegisterImageCallback(ImageCallbackType callback) {
 
 void startRenderingBuffer() {
   // Create frame output with callback
-  auto frame_output = bnb::player_api::opengl_frame_output::create([](const bnb::full_image_t& pb)
+  frame_output = bnb::player_api::opengl_frame_output::create([](const bnb::full_image_t& pb)
     {
       std::printf("Output image ok \n");
       if (g_image_callback) {
