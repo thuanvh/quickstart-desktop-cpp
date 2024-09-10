@@ -8,6 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+#include <chrono>
 
 // Function to read an image file into a byte array
 std::vector<unsigned char> ReadImageFile(const std::string& filePath, int& width, int& height, int& channels)
@@ -33,13 +35,24 @@ void WriteImageFile(const std::string& filePath, const unsigned char* imageData,
     // Use a library like stb_image_write.h to save the image (assuming it is available in your project)
     stbi_write_png(filePath.c_str(), width, height, channels, imageData, width * channels);
 }
+std::string readFileToString(const std::string& filePath) {
+  std::ifstream file(filePath);
+  if (!file) {
+    std::cerr << "Unable to open file: " << filePath << std::endl;
+    return "";
+  }
 
+  std::ostringstream oss;
+  oss << file.rdbuf();  // Read the entire file buffer into the string stream
+  return oss.str();     // Convert the string stream to a string
+}
 int main()
 {
     std::cout<<"Initialize the Banuba SDK" << std::endl;
 
     const char* resourcesPath = "D:\\projects\\banuba\\quickstart-desktop-cpp\\resources";
-    const char* clientToken = "";
+    auto token = readFileToString("banuba_token.txt");
+    const char* clientToken = token.c_str();
 
     std::cout<<"InitializeBanubaSDK" << std::endl;
 
@@ -71,9 +84,28 @@ int main()
     unsigned char* outputImage = nullptr;
     int outputSize = 0;
     int stride = width * channels;
+    loadEffect("effects/TrollGrandma");
 
-    int result = ProcessImage(playerHandle, inputImage.data(), stride, width, height, channels, &outputImage, &outputSize);
+    SetProcessSize(stride, width, height, channels, &outputImage, &outputSize);
 
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+    int result = 0;
+    for(int i = 0; i < 10; i++)
+    {
+      auto t1 = high_resolution_clock::now();
+
+      result = ProcessImage(playerHandle, inputImage.data());
+
+      auto t2 = high_resolution_clock::now();
+
+      /* Getting number of milliseconds as an integer. */
+      auto ms_int = duration_cast<milliseconds>(t2 - t1);
+      std::cout << "Processing time: " << i << " : " << ms_int.count() << " ms " << std::endl;
+    }
+    
     if (result != 0)
     {
         std::cerr << "Failed to process image." << std::endl;

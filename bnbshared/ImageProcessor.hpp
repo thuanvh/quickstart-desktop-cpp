@@ -39,10 +39,10 @@ __declspec(dllexport) void* InitializeBanubaSDK(const char* resources_path, cons
  * @param output_size   Pointer to store the size of the processed output image data.
  * @return 0 on success, -1 on failure.
  */
-__declspec(dllexport) int ProcessImage(void* player_handle, const unsigned char* input_image, 
-                                       int rgb_stride, int width, int height, int channels, 
-                                       unsigned char** output_image, int* output_size);
+__declspec(dllexport) int ProcessImage(void* player_handle, const unsigned char* input_image);
 
+__declspec(dllexport) void SetProcessSize(int stride, int width, int height, int channels, unsigned char** output_image, int* output_size);
+__declspec(dllexport) void loadEffect(const char* effectName);
 /**
  * @brief Releases the memory allocated for an image.
  *
