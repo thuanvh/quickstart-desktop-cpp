@@ -28,14 +28,8 @@ namespace WpfApp1
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string sdkPath = "D:\\projects\\banuba\\quickstart-desktop-cpp\\resources";
-            string resourcesFolder = "D:/projects/banuba/quickstart-desktop-cpp/resources";
-            string clientToken = File.ReadAllText("banuba_token.txt");
-
-            BanubaInterop.initializeBanuba(sdkPath, resourcesFolder, clientToken);
-            BanubaInterop.loadEffect("effects/TrollGrandma");
-
             
+
         }
 
         private void btnCamera_Click(object sender, RoutedEventArgs e)
@@ -45,7 +39,7 @@ namespace WpfApp1
 
         private void btnImage_Click(object sender, RoutedEventArgs e)
         {
-            int width=0, height=0;
+            int width = 0, height = 0;
             var buffer = ReadImageToRgbBuffer("face720x1280.jpg", ref width, ref height);
             Task.Run(async () =>
             {
@@ -64,8 +58,8 @@ namespace WpfApp1
             using (Bitmap bitmap = new Bitmap(imagePath))
             {
                 // Get width and height
-                 width = bitmap.Width;
-                 height = bitmap.Height;
+                width = bitmap.Width;
+                height = bitmap.Height;
 
                 // Create an RGB buffer (3 bytes per pixel)
                 byte[] rgbBuffer = new byte[width * height * 3];
@@ -90,7 +84,7 @@ namespace WpfApp1
                 return rgbBuffer;
             }
         }
-            private void btnPlay_Click(object sender, RoutedEventArgs e)
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
             BanubaInterop.playRendering();
         }
@@ -171,6 +165,20 @@ namespace WpfApp1
             RegisterImageCallback(callbackDelegate);
 
             BanubaInterop.startRenderingBuffer();
+        }
+
+        private void btnInit_Click(object sender, RoutedEventArgs e)
+        {
+            string resourcesFolder = "D:/projects/banuba/quickstart-desktop-cpp/resources";
+            string clientToken = File.ReadAllText("banuba_token.txt");
+
+            BanubaInterop.initializeBanuba(resourcesFolder, clientToken);
+            BanubaInterop.loadEffect("effects/TrollGrandma");
+
+        }
+        private void btnRelease_Click(object sender, RoutedEventArgs e)
+        {
+            BanubaInterop.releaseBanuba();
         }
     }
 }

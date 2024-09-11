@@ -57,11 +57,10 @@ int main()
     const char* resourcesPath = "D:\\projects\\banuba\\quickstart-desktop-cpp\\resources";
     auto token = readFileToString("banuba_token.txt");
     const char* clientToken = token.c_str();
-    const char* resourcesFolder = "D:/projects/banuba/quickstart-desktop-cpp/resources";
     std::cout<<"InitializeBanubaSDK" << std::endl;
 
     //void* playerHandle = initializeBanuba(resourcesPath, resourcesFolder, clientToken);
-    initializeBanuba(resourcesPath, resourcesFolder, clientToken);
+    initializeBanuba(resourcesPath, clientToken);
     std::cout<<"InitializeBanubaSDK Done" << std::endl;
  
     /*if (!playerHandle)

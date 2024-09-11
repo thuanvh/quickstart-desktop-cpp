@@ -14,6 +14,8 @@
         <Button Content="OutputGLWF" x:Name="btnOutputGLWF" HorizontalAlignment="Left" Margin="245,105,0,0" VerticalAlignment="Top" Height="43" Width="155" Click="btnOutputGLWF_Click"/>
         <Image x:Name="ImageControl" Stretch="None" Width="300" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,77,48,0"/>
         <Button x:Name="btnOutputBuffer" Content="OutputBuffer" HorizontalAlignment="Left" Margin="245,187,0,0" VerticalAlignment="Top" Height="44" Width="155" Click="btnOutputBuffer_Click"/>
+        <Button Content="InitBanuba" x:Name="btnInit" HorizontalAlignment="Left" Margin="62,34,0,0" VerticalAlignment="Top" Height="43" Width="119" Click="btnInit_Click"/>
+        <Button Content="ReleaseBanuba" x:Name="btnRelease" HorizontalAlignment="Left" Margin="245,34,0,0" VerticalAlignment="Top" Height="43" Width="119" Click="btnRelease_Click"/>
 
     </Grid>
 </Window>

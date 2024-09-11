@@ -12,7 +12,7 @@ extern "C" {
     // Function to register the callback
     BANUBA_API void RegisterImageCallback(ImageCallbackType callback);
 
-    BANUBA_API void initializeBanuba(const char* sdkPath, const char* resourcesFolder, const char* clientToken);
+    BANUBA_API void initializeBanuba(const char* resourcesFolder, const char* clientToken);
     BANUBA_API void loadEffect(const char* effectName);
     BANUBA_API void startRenderingGLFW();
     BANUBA_API void startRenderingBuffer();

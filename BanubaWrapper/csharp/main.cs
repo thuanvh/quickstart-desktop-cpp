@@ -2,11 +2,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        string sdkPath = "D:\\projects\\banuba\\quickstart-desktop-cpp\\resources";
         string resourcesFolder = "D:/projects/banuba/quickstart-desktop-cpp/resources";
         string clientToken = File.ReadAllText("banuba_token.txt");
         
-        BanubaInterop.initializeBanuba(sdkPath, resourcesFolder, clientToken);
+        BanubaInterop.initializeBanuba(resourcesFolder, clientToken);
         BanubaInterop.loadEffect("effects/TrollGrandma");
         BanubaInterop.attachCamera();
         BanubaInterop.startRenderingGLFW();

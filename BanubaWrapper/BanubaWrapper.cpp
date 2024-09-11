@@ -22,17 +22,16 @@ namespace {
     bnb::player_api::player_sptr player;
     std::shared_ptr<bnb::player_api::live_input> input;
     std::shared_ptr<bnb::player_api::window_output> window_output;
-    std::shared_ptr<bnb::utility> utility;
+    //std::shared_ptr<bnb::utility> utility;
     bnb::camera_sptr bnb_camera;
     std::shared_ptr<bnb::player_api::opengl_frame_output> frame_output;
     // Global variable to store the callback
     ImageCallbackType g_image_callback = nullptr;
 }
 
-void initializeBanuba(const char* sdkPath, const char* resourcesFolder, const char* clientToken) {
+void initializeBanuba(const char* sdkPath, const char* clientToken) {
   // Initialize BanubaSDK with token and paths to resources
-  //utility = std::make_shared< bnb::utility >({ bnb::sdk_resources_path(), resourcesFolder }, clientToken);
-  bnb::interfaces::utility_manager::initialize(std::initializer_list<std::string>{bnb::sdk_resources_path(), resourcesFolder}, clientToken);
+  bnb::interfaces::utility_manager::initialize(std::initializer_list<std::string>{bnb::sdk_resources_path(), sdkPath}, clientToken);
   // Create render delegate based on GLFW
   renderer = std::make_shared<GLFWRenderer>(render_backend);
   // Create render target
@@ -47,32 +46,6 @@ void initializeBanuba(const char* sdkPath, const char* resourcesFolder, const ch
   player = bnb::player_api::player::create(30, render_target, renderer);
   // Create live input, for realtime camera
   input = bnb::player_api::live_input::create();
-  
-  //player->load_async("effects/TrollGrandma");
-
-    //// Initialize BanubaSDK with token and paths to resources
-    //bnb::utility utility({sdkPath, resourcesFolder}, clientToken);
-
-    //// Create render delegate based on GLFW
-    //renderer = std::make_shared<GLFWRenderer>(render_backend);
-
-    //// Create render target
-    //bnb::player_api::render_target_sptr render_target;
-    //if (render_backend == render_backend_type::opengl) {
-    //    render_target = bnb::player_api::opengl_render_target::create();
-    //} else if (render_backend == render_backend_type::metal) {
-    //    render_target = bnb::player_api::metal_render_target::create();
-    //}
-
-    //// Create player
-    //player = bnb::player_api::player::create(30, render_target, renderer);
-    //
-    //// Initialize live input
-    //input = bnb::player_api::live_input::create();
-    ////player->use(input);
-    //auto window_output = bnb::player_api::window_output::create(renderer->get_native_surface());
-    //player->use(input).use(window_output);
-    //player->load_async("effects/TrollGrandma");
 }
 
 void loadEffect(const char* effectName) 
@@ -80,12 +53,6 @@ void loadEffect(const char* effectName)
   if (player) {
     player->load_async(effectName);
   }
-  // On-screen output
-  /*window_output = bnb::player_api::window_output::create(renderer->get_native_surface());
-  player->use(input).use(window_output);
-    if (player) {
-        player->load_async(effectName);
-    }*/
 }
 
 void startRenderingGLFW() {
@@ -111,7 +78,7 @@ void startRenderingBuffer() {
   // Create frame output with callback
   frame_output = bnb::player_api::opengl_frame_output::create([](const bnb::full_image_t& pb)
     {
-      std::printf("Output image ok \n");
+      //std::printf("Output image ok \n");
       if (g_image_callback) {
       
         auto output_size = pb.get_width() * pb.get_height() * pb.get_bytes_per_pixel();
@@ -126,13 +93,11 @@ void startRenderingBuffer() {
 
 void stopRendering() {
     if (player) {
-        //renderer->get_window()->close_window();
       player->pause();
     }
 }
 void playRendering() {
   if (player) {
-    //renderer->get_window()->close_window();
     player->play();
   }
 }
@@ -147,11 +112,6 @@ void attachCamera() {
 }
 
 void pushImageFromByteArray(const unsigned char* imageData, int stride, int width, int height) {
-    //if (!input) return;
-
-    //// Construct bnb::full_image_t from the byte array
-    //bnb::full_image_t image = bnb::full_image_t::create(
-    //    imageData, width, height, format == 1 ? bnb::image_format::rgba : bnb::image_format::bgra, bnb::camera_orientation::deg_0, false);
     auto image = bnb::full_image_t::create_bpc8(
       imageData,
       stride,
@@ -172,18 +132,15 @@ void pushImageFromByteArray(const unsigned char* imageData, int stride, int widt
 }
 
 void releaseBanuba() {
-    // Clean up resources
-    if (player) {
-        //player->stop();  // Ensure the player is stopped
-        player.reset();
-    }
-
-    if (renderer) {
-        //renderer->get_window()->close_window();  // Close the window if not already done
-        renderer.reset();
-    }
-
-    input.reset();  // Clear the input
+    g_image_callback = nullptr;
+    if (player) player.reset();
+    if (renderer) renderer.reset();
+    if (input) input.reset();
+    if (window_output) window_output.reset();
+    if (bnb_camera) bnb_camera.reset();
+    if (frame_output) frame_output.reset();
+    
+    bnb::interfaces::utility_manager::release();
 }
 void ReleaseImage(const unsigned char* image_data)
 {

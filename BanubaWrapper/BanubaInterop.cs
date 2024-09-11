@@ -12,7 +12,7 @@ public static class BanubaInterop
     public static extern void RegisterImageCallback(ImageCallbackDelegate callback);
 
     [DllImport("BanubaWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void initializeBanuba(string sdkPath, string resourcesFolder, string clientToken);
+    public static extern void initializeBanuba(string resourcesFolder, string clientToken);
 
     [DllImport("BanubaWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern void loadEffect(string effectName);
