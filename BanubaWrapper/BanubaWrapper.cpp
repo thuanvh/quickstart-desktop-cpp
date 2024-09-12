@@ -27,6 +27,7 @@ namespace {
     std::shared_ptr<bnb::player_api::opengl_frame_output> frame_output;
     // Global variable to store the callback
     ImageCallbackType g_image_callback = nullptr;
+    bnb::player_api::render_target_sptr render_target;
 }
 
 void initializeBanuba(const char* sdkPath, const char* clientToken) {
@@ -35,7 +36,7 @@ void initializeBanuba(const char* sdkPath, const char* clientToken) {
   // Create render delegate based on GLFW
   renderer = std::make_shared<GLFWRenderer>(render_backend);
   // Create render target
-  bnb::player_api::render_target_sptr render_target;
+  
   if (render_backend == render_backend_type::opengl) {
     render_target = bnb::player_api::opengl_render_target::create();
   }
@@ -139,7 +140,7 @@ void releaseBanuba() {
     if (window_output) window_output.reset();
     if (bnb_camera) bnb_camera.reset();
     if (frame_output) frame_output.reset();
-    
+    if (render_target) render_target.reset();
     bnb::interfaces::utility_manager::release();
 }
 void ReleaseImage(const unsigned char* image_data)
