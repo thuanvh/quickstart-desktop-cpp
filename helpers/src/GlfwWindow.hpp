@@ -32,7 +32,8 @@ public:
         m_resize_callback = std::move(resize);
         m_close_callback = std::move(close);
     }
-
+    void release();
+    void stopRender();
 private:
     void track_events();
     void untrack_events();
@@ -42,5 +43,7 @@ private:
     resize_callback m_resize_callback;
     close_callback m_close_callback;
     bnb::interfaces::render_backend_type m_render_backend;
+    bool released;
+    bool stoped;
 }; /* class glfw_window */
 

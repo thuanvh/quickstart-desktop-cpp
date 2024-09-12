@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 #include <chrono>
+#include <thread>
 
 // Function to read an image file into a byte array
 std::vector<unsigned char> ReadImageFile(const std::string& filePath, int& width, int& height, int& channels)
@@ -50,8 +51,14 @@ void ImageCallback(const unsigned char* imageData, int width, int height) {
   std::cout << "ImageCallback " << width << " x " << height << std::endl;
   ReleaseImage(imageData);
 }
+void startRender() {
+  std::thread t(startRenderingGLFW);
+  t.detach();
+}
 int main()
 {
+  do
+  {
     std::cout<<"Initialize the Banuba SDK" << std::endl;
 
     const char* resourcesPath = "D:\\projects\\banuba\\quickstart-desktop-cpp\\resources";
@@ -92,9 +99,12 @@ int main()
 
     attachCamera();
     
+    startRender();
     //startRenderingGLFW();
-    RegisterImageCallback(ImageCallback);
-    startRenderingBuffer();
+    
+    //RegisterImageCallback(ImageCallback);
+    //startRenderingBuffer();
+
     //SetProcessSize(stride, width, height, channels, &outputImage, &outputSize);
 
     //using std::chrono::high_resolution_clock;
@@ -128,10 +138,16 @@ int main()
 
     //std::cout<< "Clean up the Banuba SDK resources" << std::endl;
     //Cleanup(playerHandle);
-    do
-    {
+    
       std::cout << '\n' << "Press a key to continue...";
-    } while (std::cin.get() != '\n');
+      auto inputChar = std::cin.get();
+      if (inputChar != '\n') {
+        break;
+      }
+      else {
+        releaseBanuba();
+      }
+    } while (true);
     std::cout << "Image processing completed successfully." << std::endl;
     return 0;
 }

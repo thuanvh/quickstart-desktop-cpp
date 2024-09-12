@@ -30,6 +30,7 @@ public:
     // Called before rendering process, assume activation context
     void activate() override
     {
+      if(m_window)
         m_window->make_context_current();
     }
 
@@ -42,10 +43,15 @@ public:
     void finished(int64_t frame_number) override
     {
         if (frame_number != -1) {
+          if (m_window)
             m_window->swap_buffers();
         }
     }
-
+    void release() {
+      m_window->stopRender();
+      m_window->release();
+      m_window.reset();
+    }
 private:
     std::shared_ptr<GlfwWindow> m_window;
     bnb::interfaces::render_backend_type m_render_backend;

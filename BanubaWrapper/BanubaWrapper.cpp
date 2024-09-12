@@ -108,6 +108,7 @@ void attachCamera() {
     auto now_us = std::chrono::duration_cast<std::chrono::microseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch()
     ).count();
+    if(input)
     input->push(image, now_us);
     }, 0);
 }
@@ -127,20 +128,36 @@ void pushImageFromByteArray(const unsigned char* imageData, int stride, int widt
     auto now_us = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::high_resolution_clock::now().time_since_epoch()
     ).count();
-
+    if(input)
     // Push the image to the input
     input->push(image, now_us);
 }
 
 void releaseBanuba() {
     g_image_callback = nullptr;
-    if (player) player.reset();
-    if (renderer) renderer.reset();
+    if (player) {
+      player->unuse(nullptr);
+    }
+    if (render_target) {
+      //render_target->detach(*(player.get()));
+    }
+    if (renderer) {
+      renderer->release();
+    }
+    if (render_target) {      
+      render_target.reset();
+    }    
+    if (player) {
+      player.reset();
+    }
+    if (renderer) {      
+      renderer.reset();
+    }
     if (input) input.reset();
     if (window_output) window_output.reset();
     if (bnb_camera) bnb_camera.reset();
     if (frame_output) frame_output.reset();
-    if (render_target) render_target.reset();
+    
     bnb::interfaces::utility_manager::release();
 }
 void ReleaseImage(const unsigned char* image_data)
