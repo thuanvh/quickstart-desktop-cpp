@@ -59,7 +59,7 @@ namespace
 } /* namespace */
 
 GlfwWindow::GlfwWindow(const std::string_view& title, render_backend_type render_backend)
-    : m_render_backend(render_backend),stoped(false),released(false)
+    : m_render_backend(render_backend)
 {
     // Init glfw for glfw_window
     if (!glfwInit()) {
@@ -101,40 +101,27 @@ GlfwWindow::GlfwWindow(const std::string_view& title, render_backend_type render
     glfwSwapInterval(0);
 
     track_events();
-    released = false;
 }
 
 GlfwWindow::~GlfwWindow()
 {
-  release();
-}
-void GlfwWindow::release() {
-  if (!released) {
-    stoped = true;
-    m_resize_callback = nullptr;
-    m_close_callback = nullptr;
-    untrack_events();    
+    untrack_events();
     glfwMakeContextCurrent(nullptr);
     glfwDestroyWindow(m_window);
-    m_window = NULL;
     glfwTerminate();
-    released = true;
-  }
 }
+
 /* glfw_window::make_context_current */
 void GlfwWindow::make_context_current()
 {
-  if (!stoped && !released) {
     if (m_render_backend == render_backend_type::opengl) {
-      glfwMakeContextCurrent(m_window);
+        glfwMakeContextCurrent(m_window);
     }
-  }
 }
 
 /* glfw_window::make_nothing_current */
 void GlfwWindow::make_nothing_current()
 {
-  if (!stoped && !released)
     if (m_render_backend == render_backend_type::opengl) {
         glfwMakeContextCurrent(nullptr);
     }
@@ -143,7 +130,6 @@ void GlfwWindow::make_nothing_current()
 /* glfw_window::swap_buffers */
 void GlfwWindow::swap_buffers()
 {
-  if (!stoped && !released)
     if (m_render_backend == render_backend_type::opengl) {
         glfwSwapBuffers(m_window);
     }
@@ -152,24 +138,17 @@ void GlfwWindow::swap_buffers()
 /* glfw_window::show_window_and_run_events_loop */
 void GlfwWindow::show_window_and_run_events_loop()
 {
-  if (!stoped) {
-    try {
-      int32_t x, y, w, h;
-      calculate_window_size_and_pos(x, y, w, h);
-      if (!stoped)glfwSetWindowPos(m_window, x, y);
-      if (!stoped)glfwSetWindowSize(m_window, w, h);
-      if (!stoped)
-      glfwShowWindow(m_window);
+    int32_t x, y, w, h;
+    calculate_window_size_and_pos(x, y, w, h);
+    glfwSetWindowPos(m_window, x, y);
+    glfwSetWindowSize(m_window, w, h);
+    glfwShowWindow(m_window);
 
-      while (!stoped && !glfwWindowShouldClose(m_window)) {
+    while (!glfwWindowShouldClose(m_window)) {
         glfwWaitEvents();
-      }
-    }catch(...){}
-  }
+    }
 }
-void GlfwWindow::stopRender() {
-  stoped = true;
-}
+
 /* glfw_window::track_events */
 void GlfwWindow::track_events()
 {
