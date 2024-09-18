@@ -46,7 +46,7 @@ namespace WpfApp1
 
                 while (true)
                 {
-                    BanubaInterop.pushImageFromByteArray(buffer, width * 3, width, height);
+                    BanubaInterop.pushImageFromByteArray(buffer, width * 3, width, height, (int)BanubaInterop.pixel_buffer_format.bpc8_bgr);
                     await Task.Delay(30);
                 }
 
@@ -108,19 +108,19 @@ namespace WpfApp1
             BanubaInterop.ReleaseImage(imageData);
             //Console.WriteLine($"Callback called with image of size: {width}x{height}");
             //// Create a BitmapSource from the RGBA buffer
-            //BitmapSource bitmap = BitmapSource.Create(
-            //    width,                        // Width of the image
-            //    height,                       // Height of the image
-            //    96,                           // DPI (Dots Per Inch) of the image
-            //    96,                           // DPI (Dots Per Inch) of the image
-            //    PixelFormats.Bgra32,          // Pixel format (Bgra32 for RGBA buffer)
-            //    null,                         // Palette (null for RGBA)
-            //    managedArray,                   // Buffer containing pixel data
-            //    width * 4                     // Stride (width * bytes per pixel)
-            //);
-            //SaveBitmapSourceAsJpeg(bitmap, "output.jpg");
+            BitmapSource bitmap = BitmapSource.Create(
+                width,                        // Width of the image
+                height,                       // Height of the image
+                96,                           // DPI (Dots Per Inch) of the image
+                96,                           // DPI (Dots Per Inch) of the image
+                PixelFormats.Bgra32,          // Pixel format (Bgra32 for RGBA buffer)
+                null,                         // Palette (null for RGBA)
+                managedArray,                   // Buffer containing pixel data
+                width * 4                     // Stride (width * bytes per pixel)
+            );
+            SaveBitmapSourceAsJpeg(bitmap, "output.jpg");
             //// Set the BitmapSource as the source for the Image control
-            //Dispatcher.BeginInvoke( new Action(() => { ImageControl.Source = bitmap; }));
+            Dispatcher.BeginInvoke( new Action(() => { ImageControl.Source = bitmap; }));
 
             ////// Process the image data here
             ////// Example: Print out the first few bytes
@@ -164,7 +164,7 @@ namespace WpfApp1
             // Register the callback with the C++ library
             RegisterImageCallback(callbackDelegate);
 
-            BanubaInterop.startRenderingBuffer();
+            BanubaInterop.startRenderingBuffer((int)BanubaInterop.pixel_buffer_format.bpc8_bgra);
         }
 
         private void btnInit_Click(object sender, RoutedEventArgs e)
