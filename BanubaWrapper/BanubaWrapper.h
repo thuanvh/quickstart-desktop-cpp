@@ -15,11 +15,11 @@ extern "C" {
     BANUBA_API void initializeBanuba(const char* resourcesFolder, const char* clientToken);
     BANUBA_API void loadEffect(const char* effectName);
     BANUBA_API void startRenderingGLFW();
-    BANUBA_API void startRenderingBuffer();
+    BANUBA_API void startRenderingBuffer(int pixelFormat);
 
     BANUBA_API void stopRendering();
     BANUBA_API void playRendering();
-    BANUBA_API void pushImageFromByteArray(const unsigned char* imageData, int width, int height, int format);
+    BANUBA_API void pushImageFromByteArray(const unsigned char* imageData, int stride, int width, int height, int pixelformat);
     BANUBA_API void releaseBanuba();  // New release function
     BANUBA_API void attachCamera();
 

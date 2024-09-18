@@ -75,7 +75,7 @@ void RegisterImageCallback(ImageCallbackType callback) {
     g_image_callback = callback;
 }
 
-void startRenderingBuffer() {
+void startRenderingBuffer(int pixelFormat) {
   // Create frame output with callback
   frame_output = bnb::player_api::opengl_frame_output::create([](const bnb::full_image_t& pb)
     {
@@ -87,7 +87,7 @@ void startRenderingBuffer() {
         std::memcpy(output_image, pb.get_base_ptr(), output_size);
         g_image_callback(output_image, pb.get_width(), pb.get_height());
       }
-    }, bnb::pixel_buffer_format::bpc8_rgba);
+    }, (bnb::pixel_buffer_format)pixelFormat);
 
   player->use(input).use(frame_output);
 }
@@ -112,13 +112,13 @@ void attachCamera() {
     }, 0);
 }
 
-void pushImageFromByteArray(const unsigned char* imageData, int stride, int width, int height) {
+void pushImageFromByteArray(const unsigned char* imageData, int stride, int width, int height, int pixelformat) {
     auto image = bnb::full_image_t::create_bpc8(
       imageData,
       stride,
       width,
       height,
-      bnb::pixel_buffer_format::bpc8_rgb,
+      (bnb::pixel_buffer_format)(pixelformat),
       bnb::camera_orientation::deg_0,
       false,
       [](uint8_t* data) { /* deleting the image data */ }

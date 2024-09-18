@@ -11,6 +11,17 @@
 #include <sstream>
 #include <chrono>
 
+enum class main_pixel_buffer_format : int32_t
+{
+  bpc8_rgb = 0x0101,  // one plane: RGB
+  bpc8_bgr = 0x0102,  // one plane: BGR
+  bpc8_rgba = 0x0103, // one plane: RGBA
+  bpc8_bgra = 0x0104, // one plane: BGRA
+  bpc8_argb = 0x0105, // one plane: ARGB
+  nv12 = 0x0201,      // two planes: first RED, second RG
+  i420 = 0x0401       // three planes: first RED, second RED, third RED
+}; // enum class pixel_buffer_format
+
 // Function to read an image file into a byte array
 std::vector<unsigned char> ReadImageFile(const std::string& filePath, int& width, int& height, int& channels)
 {
@@ -94,7 +105,7 @@ int main()
     
     //startRenderingGLFW();
     RegisterImageCallback(ImageCallback);
-    startRenderingBuffer();
+    startRenderingBuffer((int)main_pixel_buffer_format::bpc8_rgba);
     //SetProcessSize(stride, width, height, channels, &outputImage, &outputSize);
 
     //using std::chrono::high_resolution_clock;
